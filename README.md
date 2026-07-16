@@ -105,6 +105,8 @@ Research trend visualization
 👨‍💻 Author
 Maheshwari Rewatkar
 
+Demo link : https://litreview-ai-smart-arxiv-exploration.onrender.com/
+
 GitHub: https://github.com/Maheshwari2006
 📄 License
 This project is licensed under the MIT License.
