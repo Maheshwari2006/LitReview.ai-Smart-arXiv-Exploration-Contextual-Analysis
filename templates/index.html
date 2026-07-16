@@ -138,7 +138,7 @@
             <div class="config-ribbon text-start">
                 <div class="row g-3 align-items-end">
                     <div class="col-md-6">
-                        <label class="config-label">Extraction Limit ({{ max_results|default(10) }} Papers)</label>
+                        <label class="config-label">Extraction Limit ({{ max_results|default(30) }} Papers)</label>
                         <input type="range" class="form-range" name="max_results" min="10" max="30" value="{{ max_results|default(10) }}" oninput="this.previousElementSibling.innerText='Extraction Limit (' + this.value + ' Papers)'">
                     </div>
 
@@ -193,6 +193,22 @@
                 <p class="text-muted small mb-0">Enter a topic in the portal above to instantly index targets within your chosen year bounds.</p>
             </div>
         {% endif %}
+    </div>{% if papers %}
+    <div class="alert alert-light border shadow-sm rounded-3 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background-color: #fafafa;" role="alert">
+        <div class="small text-secondary">
+            🎯 Found <strong>{{ papers|length }}</strong> matching documents within the chronological parameters {{ start_year }} – {{ end_year }}.
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <form action="/export-csv" method="POST" class="m-0">
+                <input type="hidden" name="query" value="{{ query }}">
+                <input type="hidden" name="start_year" value="{{ start_year }}">
+                <input type="hidden" name="end_year" value="{{ end_year }}">
+                <input type="hidden" name="max_results" value="{{ max_results }}">
+                <button type="submit" class="btn btn-sm btn-success px-3 fw-semibold">📥 Export Results to CSV</button>
+            </form>
+            <span class="badge bg-secondary font-monospace">Sorted by Relevance</span>
+        </div>
     </div>
+    {%endif%}
 </body>
 </html>
