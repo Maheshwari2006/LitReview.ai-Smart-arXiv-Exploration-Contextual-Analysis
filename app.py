@@ -135,3 +135,50 @@ def export_csv():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+from flask import Flask, render_template, request, session
+
+app = Flask(__name__)
+# 1. Add a secret key (required to use sessions in Flask)
+app.secret_key = 'some_super_secure_and_secret_key_here'
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    query = None
+    start_year = "2020" # Use whatever your default start year is
+    end_year = "2026"   # Use whatever your default end year is
+    papers = None
+
+    # Case A: User submitted a new search form
+    if request.method == 'POST':
+        query = request.form.get('query')
+        start_year = request.form.get('start_year', '2020')
+        end_year = request.form.get('end_year', '2026')
+        
+        # Save to session so the browser remembers it
+        session['last_query'] = query
+        session['last_start'] = start_year
+        session['last_end'] = end_year
+
+    # Case B: User reloaded/returned after 10 mins (GET request)
+    elif 'last_query' in session:
+        query = session['last_query']
+        start_year = session['last_start']
+        end_year = session['last_end']
+
+    # If we have a query (either from a new POST or restored from the session), run your search
+    if query:
+        # ==========================================================
+        # PASTE YOUR EXISTING SEARCH & RANKING LOGIC HERE!
+        # (The code where you fetch from arXiv, run TF-IDF, and compute Cosine Similarity)
+        # 
+        # Make sure at the end of your logic, you have your list of 
+        # ranked papers saved in a variable (e.g., papers = ranked_results)
+        # ==========================================================
+        
+        # Finally, render the template with the papers
+        return render_template('index.html', papers=papers, query=query, start_year=start_year, end_year=end_year)
+
+    # Case C: First-time visitor (no query, no session data)
+    return render_template('index.html', papers=None)
