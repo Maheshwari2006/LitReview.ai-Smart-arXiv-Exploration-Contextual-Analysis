@@ -3,212 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LitReview.ai — Academic Exploration Portal</title>
+    <title>LitReview.ai — Smart arXiv Exploration</title>
+    <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { 
-            background-color: #ffffff; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #202124;
-        }
-        
-        .google-search-container {
-            max-width: 780px;
-            margin: 0 auto;
-            padding: 5rem 1.25rem 2rem 1.25rem;
-            text-align: center;
-        }
-
-        .brand-logo {
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            color: #202124;
-            margin-bottom: 0.25rem;
-        }
-
-        .brand-logo span {
-            color: #0d6efd;
-        }
-
-        .search-subtitle {
-            font-size: 0.95rem;
-            color: #70757a;
-            margin-bottom: 2.5rem;
-        }
-
-        .search-capsule {
-            background: #ffffff;
-            border: 1px solid #dfe1e5;
-            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
-            border-radius: 24px;
-            padding: 0.5rem 1.25rem;
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            transition: box-shadow 0.2s;
-        }
-
-        .search-capsule:focus-within {
-            box-shadow: 0 4px 12px rgba(32,33,36,0.30);
-            border-color: rgba(223,225,229,0);
-        }
-
-        .search-input-core {
-            border: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            font-size: 1.1rem;
-            padding: 0.4rem 0.5rem;
-            color: #202124;
-        }
-
-        .btn-google-search {
-            background-color: #0d6efd;
-            color: white;
-            border-radius: 20px;
-            font-weight: 600;
-            padding: 0.4rem 1.75rem;
-            border: none;
-            transition: background-color 0.15s;
-        }
-
-        .btn-google-search:hover {
-            background-color: #0b5ed7;
-            color: white;
-        }
-
-        .config-ribbon {
+        body {
             background-color: #f8f9fa;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 3rem;
+            font-family: Arial, sans-serif;
         }
-
-        .config-label {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #4a5568;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 0.4rem;
-            display: block;
+        .scholar-title {
+            color: #1a0dab;
+            font-size: 1.2rem;
+            text-decoration: none;
         }
-
-        .results-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 1.25rem 4rem 1.25rem;
+        .scholar-title:hover {
+            text-decoration: underline;
         }
-
-        .paper-card { 
-            margin-bottom: 1.75rem; 
-            border-radius: 12px; 
-            border: 1px solid #e2e8f0; 
-            background: #ffffff; 
-            transition: transform 0.2s, box-shadow 0.2s; 
+        .scholar-green-line {
+            color: #006621;
+            font-size: 0.9rem;
         }
-
-        .paper-card:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); 
-        }
-
-        .score-badge { 
-            font-weight: bold; 
-            background-color: #eff6ff; 
-            color: #1e40af; 
+        .paper-card {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
     </style>
 </head>
 <body>
 
-    <div class="google-search-container">
-        <h1 class="brand-logo">⚡ LitReview<span>.ai</span></h1>
-        <div class="search-subtitle">Smart Academic Query Discovery Portal</div>
-        
-        <form method="POST" action="/">
-            <div class="search-capsule">
-                <span class="text-muted me-2">🔍</span>
-                <input type="text" class="form-control search-input-core" name="query" value="{{ query }}" placeholder="Search research topics, keywords, or methodologies..." required>
-                <button type="submit" class="btn btn-google-search">Search</button>
-            </div>
-
-            <div class="config-ribbon text-start">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-6">
-                        <label class="config-label">Extraction Limit ({{ max_results|default(30) }} Papers)</label>
-                        <input type="range" class="form-range" name="max_results" min="10" max="30" value="{{ max_results|default(10) }}" oninput="this.previousElementSibling.innerText='Extraction Limit (' + this.value + ' Papers)'">
+<div class="container my-5">
+    <!-- Header Search Bar -->
+    <div class="row mb-4 justify-content-center">
+        <div class="col-md-8 text-center">
+            <h2 class="fw-bold text-dark mb-3">🎓 LitReview.ai</h2>
+            <form method="POST" action="/" class="p-3 bg-white rounded shadow-sm border">
+                <div class="input-group mb-2">
+                    <input type="text" name="query" class="form-control" placeholder="Search research papers..." value="{{ query or '' }}" required>
+                    <button class="btn btn-primary px-4" type="submit">Search</button>
+                </div>
+                <div class="row g-2">
+                    <div class="col">
+                        <input type="number" name="start_year" class="form-control form-control-sm" placeholder="Start Year" value="{{ start_year or '2020' }}">
                     </div>
-
-                    <div class="col-md-6">
-                        <label class="config-label">Target Year Range Window</label>
-                        <div class="input-group input-group-sm">
-                            <input type="number" class="form-control text-center" name="start_year" value="{{ start_year|default(2020) }}" min="1990" max="2026" placeholder="From">
-                            <span class="input-group-text px-2 bg-white border-start-0 border-end-0 text-muted small">to</span>
-                            <input type="number" class="form-control text-center" name="end_year" value="{{ end_year|default(2026) }}" min="1990" max="2026" placeholder="To">
-                        </div>
+                    <div class="col">
+                        <input type="number" name="end_year" class="form-control form-control-sm" placeholder="End Year" value="{{ end_year or '2026' }}">
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-
-    <div class="results-wrapper">
-        {% if papers %}
-            <div class="alert alert-light border shadow-sm rounded-3 mb-4 d-flex justify-content-between align-items-center" style="background-color: #fafafa;" role="alert">
-                <div class="small text-secondary">
-                    🎯 Found <strong>{{ papers|length }}</strong> matching documents within the chronological parameters {{ start_year }} – {{ end_year }}.
-                </div>
-                <span class="badge bg-secondary font-monospace">Sorted by Relevance</span>
-            </div>
-            
-            <div class="paper-list">
-                {% for paper in papers %}
-                <div class="card paper-card shadow-sm p-4">
-                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-                        <h4 class="h5 text-dark fw-bold mb-0 flex-grow-1">{{ loop.index }}. {{ paper.title }}</h4>
-                        <div>
-                            <span class="badge bg-dark me-2">{{ paper.source }}</span>
-                            <span class="badge score-badge">Score: {{ paper.score }}</span>
-                        </div>
-                    </div>
-                    
-                    <h6 class="fw-bold mt-3 text-dark small text-uppercase tracking-wider text-muted">📋 Abstract Extract:</h6>
-                    <p class="text-secondary mb-0" style="text-align: justify; white-space: pre-line; font-size: 0.95rem;">{{ paper.summary }}</p>
-                    
-                    <div class="d-flex gap-2 mt-3">
-                        <a href="{{ paper.link }}" target="_blank" class="btn btn-sm btn-outline-primary px-3">🔗 Open Abstract Page</a>
-                        {% if paper.source == 'arXiv' %}
-                            <a href="{{ paper.link.replace('abs', 'pdf') }}.pdf" target="_blank" class="btn btn-sm btn-danger px-3">📄 View Full PDF Document</a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="text-center py-5 border border-dashed rounded" style="background-color: #fafafa;">
-                <p class="text-muted fs-6 mb-1">Awaiting Search Input Matrix</p>
-                <p class="text-muted small mb-0">Enter a topic in the portal above to instantly index targets within your chosen year bounds.</p>
-            </div>
-        {% endif %}
-    </div>{% if papers %}
-    <div class="alert alert-light border shadow-sm rounded-3 mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background-color: #fafafa;" role="alert">
-        <div class="small text-secondary">
-            🎯 Found <strong>{{ papers|length }}</strong> matching documents within the chronological parameters {{ start_year }} – {{ end_year }}.
-        </div>
-        <div class="d-flex align-items-center gap-2">
-            <form action="/export-csv" method="POST" class="m-0">
-                <input type="hidden" name="query" value="{{ query }}">
-                <input type="hidden" name="start_year" value="{{ start_year }}">
-                <input type="hidden" name="end_year" value="{{ end_year }}">
-                <input type="hidden" name="max_results" value="{{ max_results }}">
-                <button type="submit" class="btn btn-sm btn-success px-3 fw-semibold">📥 Export Results to CSV</button>
             </form>
-            <span class="badge bg-secondary font-monospace">Sorted by Relevance</span>
         </div>
     </div>
-    {%endif%}
+
+    <!-- Results Display -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if papers %}
+                <h5 class="text-secondary mb-4">Ranked Results ({{ papers|length }} found)</h5>
+                
+                {% for paper in papers %}
+                    <div class="paper-card p-4 mb-3 border">
+                        <!-- 1. Clickable Blue Title -->
+                        <h4 class="mb-1">
+                            <a href="{{ paper.link }}" target="_blank" class="scholar-title fw-semibold">
+                                {{ paper.title }}
+                            </a>
+                        </h4>
+
+                        <!-- 2. Green Scholar Line: Authors, Year, Source -->
+                        <div class="scholar-green-line mb-2">
+                            <span>{{ paper.authors }}</span>
+                            <span class="mx-1">•</span>
+                            <span class="fw-bold">{{ paper.year }}</span>
+                            <span class="mx-1">•</span>
+                            <a href="{{ paper.link }}" target="_blank" class="text-success text-decoration-none">arxiv.org</a>
+                        </div>
+
+                        <!-- 3. Actions Toolbar (No abstract here!) -->
+                        <div class="d-flex align-items-center gap-3" style="font-size: 0.85rem;">
+                            <span class="badge bg-light text-dark border">
+                                Match Score: {{ (paper.similarity_score * 100) | round(1) }}%
+                            </span>
+                            
+                            <button onclick="copyCitation('{{ paper.authors }}', '{{ paper.year }}', '{{ paper.title }}', '{{ paper.link }}')" class="btn btn-sm btn-link text-secondary p-0 text-decoration-none">
+                                📋 Copy Citation
+                            </button>
+
+                            {% if paper.pdf_link %}
+                                <a href="{{ paper.pdf_link }}" target="_blank" class="text-danger fw-bold text-decoration-none">
+                                    [PDF] View full paper
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <!-- Default Welcome / Empty Screen -->
+                <div class="text-center p-5 bg-white border rounded">
+                    <h4 class="text-muted mb-2">Awaiting Search Input Matrix</h4>
+                    <p class="text-secondary m-0">Enter a topic in the portal above to instantly index targets within your chosen year bounds.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Helper Citation Generator Script -->
+<script>
+function copyCitation(authors, year, title, link) {
+    // Generate simple clean APA layout: Author, A. A. (Year). Title.
+    let cleanAuthors = authors.split(',')[0]; // Grabs primary author
+    if (authors.includes(',')) { cleanAuthors += " et al."; }
+    
+    const citation = `${cleanAuthors} (${year}). ${title}. Retrieved from ${link}`;
+    
+    navigator.clipboard.writeText(citation).then(() => {
+        alert("APA Citation copied to clipboard!\n\n" + citation);
+    }).catch(err => {
+        console.error('Could not copy citation: ', err);
+    });
+}
+</script>
+
 </body>
 </html>
